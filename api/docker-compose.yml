@@ -1,18 +1,18 @@
-version: '3'
+version: '3.8'
 
 services:
   mysql:
-    image: mysql:5
-    container_name: todolist_container
+    image: mysql:5.7  # Usando a versão 5.7 do MySQL
+    container_name: mysql_db
     environment:
-      MYSQL_ROOT_PASSWORD: todo-list@25
-      MYSQL_DATABASE: todolist-api
-      MYSQL_USER: todo_list_25
-      MYSQL_PASSWORD: todo-list@25
+      MYSQL_ROOT_PASSWORD: todolist  # Senha do usuário root
+      MYSQL_DATABASE: todolist       # Nome do banco de dados a ser criado
+      MYSQL_USER: todolist                  # Nome do usuário do banco de dados
+      MYSQL_PASSWORD: todolist      # Senha do usuário do banco de dados
     ports:
-      - "3307:3306"
+      - "3306:3306"  # Mapeando a porta 3306 do contêiner para a porta 3306 do host
     volumes:
-      - mysql_data_todolist:/var/lib/mysql
+      - mysql_data:/var/lib/mysql  # Persistência de dados
 
 volumes:
-  mysql_data:
+  mysql_data:  # Definindo o volume para persistir os dados do MySQL
