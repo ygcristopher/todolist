@@ -1,6 +1,6 @@
 function TodoList() {
     return (
-        <div>
+        <div className="bg-slate-300 h-screen">
             Todo list
         </div>
     )
