@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5
+    container_name: todolist_container
+    environment:
+      MYSQL_ROOT_PASSWORD: todo-list@25
+      MYSQL_DATABASE: todolist-api
+      MYSQL_USER: todo_list_25
+      MYSQL_PASSWORD: todo-list@25
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data_todolist:/var/lib/mysql
+
+volumes:
+  mysql_data:
