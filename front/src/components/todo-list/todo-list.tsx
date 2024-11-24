@@ -54,6 +54,15 @@ function TodoList() {
         <h1 className="text-2xl font-bold">Minha ToDo List</h1>
         <Button onClick={() => setIsModalOpen(true)}>Adicionar Tarefa</Button>
       </div>
+     
+        {/* Modal de criação de tarefas */}
+        {isModalOpen && (
+          <CreateTaskModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onTaskCreated={fetchTasks}
+          />
+        )}
 
       <div className="space-y-4">
         {tasks.map((task) => (
@@ -61,14 +70,6 @@ function TodoList() {
         ))}
       </div>
 
-      {/* Modal de criação de tarefas */}
-      {isModalOpen && (
-        <CreateTaskModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onTaskCreated={fetchTasks}
-        />
-      )}
     </div>
   );
 }
