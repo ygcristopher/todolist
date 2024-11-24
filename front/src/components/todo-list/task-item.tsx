@@ -21,6 +21,9 @@ interface TaskItemProps {
 const TaskItem = ({ task, fetchTasks,  }: TaskItemProps) => {
   const [isCompleted, setIsCompleted] = useState(task.completed);
   const [userId, setUserId] = useState<string | null>(null);
+  const [title, setTitle] = useState(task.title);
+  const [description, setDescription] = useState(task.description);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const getToken = localStorage.getItem("token");
@@ -63,21 +66,73 @@ const TaskItem = ({ task, fetchTasks,  }: TaskItemProps) => {
     }
   };
 
+  const saveTask = async () => {
+    try {
+      await axios.put(
+        `http://localhost:3003/edit-tasks/${userId}`,
+        {
+          id: task.id,
+          title,
+          description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setIsEditing(false); 
+      fetchTasks(); 
+    } catch (error) {
+      console.error("Erro ao salvar tarefa:", error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-between p-4 border rounded shadow">
       <div className="flex items-center space-x-4">
         <Checkbox checked={isCompleted} onCheckedChange={toggleCompleted} />
         <div>
-          <p className={`font-bold ${isCompleted ? "line-through" : ""}`}>
-            {task.title}
-          </p>
-          <p className="text-sm text-gray-600">{task.description}</p>
+          {isEditing ? (
+            <div>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="border p-2 rounded"
+                placeholder="Título da Tarefa"
+              />
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="border p-2 mt-2 rounded w-full"
+                placeholder="Descrição da Tarefa"
+              />
+              <div className="flex space-x-2 mt-2">
+                <Button variant="outline" onClick={saveTask}>
+                  Salvar
+                </Button>
+                <Button variant="destructive" onClick={() => setIsEditing(false)}>
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className={`font-bold ${isCompleted ? "line-through" : ""}`}>
+                {task.title}
+              </p>
+              <p className="text-sm text-gray-600">{task.description}</p>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex space-x-2">
-        <Button variant="outline" onClick={() => console.log("Editar tarefa")}>
-          Editar
-        </Button>
+        {!isEditing && (
+          <Button variant="outline" onClick={() => setIsEditing(true)}>
+            Editar
+          </Button>
+        )}
         <Button variant="destructive" onClick={deleteTask}>
           Excluir
         </Button>
