@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Dialog } from "../ui/dialog";
 import { Input } from "../ui/input";
-import { Button } from "@/components-shadcn/ui/button";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
