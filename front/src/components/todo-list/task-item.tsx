@@ -1,16 +1,18 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import timeAgo from "@/models/formatTimeAgo";
 
 interface Task {
   id: number;
   title: string;
   description: string;
   completed: boolean;
+  created_at: string;
 }
 
 interface TaskItemProps {
@@ -18,7 +20,7 @@ interface TaskItemProps {
   fetchTasks: () => void;
 }
 
-const TaskItem = ({ task, fetchTasks,  }: TaskItemProps) => {
+const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
   const [isCompleted, setIsCompleted] = useState(task.completed);
   const [userId, setUserId] = useState<string | null>(null);
   const [title, setTitle] = useState(task.title);
@@ -36,15 +38,15 @@ const TaskItem = ({ task, fetchTasks,  }: TaskItemProps) => {
   const toggleCompleted = async () => {
     try {
       await axios.put(
-        `http://localhost:3003/tasks/${userId}`,  
-        { completed: !isCompleted, taskId: task.id }, 
+        `http://localhost:3003/tasks/${userId}`,
+        { completed: !isCompleted, taskId: task.id },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-  
+
       setIsCompleted(!isCompleted);
       fetchTasks();
     } catch (error) {
@@ -58,7 +60,7 @@ const TaskItem = ({ task, fetchTasks,  }: TaskItemProps) => {
         data: { taskId: task.id },
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }
+        },
       });
       fetchTasks();
     } catch (error) {
@@ -81,8 +83,8 @@ const TaskItem = ({ task, fetchTasks,  }: TaskItemProps) => {
           },
         }
       );
-      setIsEditing(false); 
-      fetchTasks(); 
+      setIsEditing(false);
+      fetchTasks();
     } catch (error) {
       console.error("Erro ao salvar tarefa:", error);
     }
@@ -112,17 +114,25 @@ const TaskItem = ({ task, fetchTasks,  }: TaskItemProps) => {
                 <Button variant="outline" onClick={saveTask}>
                   Salvar
                 </Button>
-                <Button variant="destructive" onClick={() => setIsEditing(false)}>
+                <Button
+                  variant="destructive"
+                  onClick={() => setIsEditing(false)}
+                >
                   Cancelar
                 </Button>
               </div>
             </div>
           ) : (
-            <div>
-              <p className={`font-bold ${isCompleted ? "line-through" : ""}`}>
-                {task.title}
+            <div className="w-full flex flex-col gap-2">
+              <p className="text-sm text-gray-600">
+                {timeAgo(task.created_at)}
               </p>
+              <div className="flex w-full flex-col justify-between">
+                <p className={`font-bold ${isCompleted ? "line-through" : ""}`}>
+                  {task.title}
+                </p>
               <p className="text-sm text-gray-600">{task.description}</p>
+              </div>
             </div>
           )}
         </div>
