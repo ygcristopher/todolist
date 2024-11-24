@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -8,7 +9,7 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const router = useRouter()
+  const router = useRouter();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -20,41 +21,48 @@ function Register() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ name, email, password }),
-      })
+      });
 
-      if(response.status === 201) {
-        setEmail("")
-        setName("")
-        setPassword("")
-        router.push("/")
+      if (response.status === 201) {
+        setEmail("");
+        setName("");
+        setPassword("");
+        router.push("/");
       }
 
-      console.log(response)
+      console.log(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    
   }
 
   function handleNameChange(e: FormEvent<HTMLInputElement>) {
-    setName(e.currentTarget.value)
+    setName(e.currentTarget.value);
   }
 
   function handleEmailChange(e: FormEvent<HTMLInputElement>) {
-    setEmail(e.currentTarget.value)
+    setEmail(e.currentTarget.value);
   }
 
   function handlePasswordChange(e: FormEvent<HTMLInputElement>) {
-    setPassword(e.currentTarget.value)
+    setPassword(e.currentTarget.value);
   }
 
-    return (
-        <div>
+  return (
+    <div>
       <div className="bg-gray-100 min-h-screen flex items-center justify-center">
         <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
           <h1 className="text-2xl font-semibold text-center">Register</h1>
+          <div className="w-full flex items-center justify-center mt-2">
+            <h4>
+              Do you have an a account?{" "}
+              <Link href="/" className="text-blue-500">
+                Click here
+              </Link>
+            </h4>
+          </div>
           <form className="mt-4 space-y-6" onSubmit={handleSubmit}>
-          <div>
+            <div>
               <label
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
@@ -107,7 +115,7 @@ function Register() {
         </div>
       </div>
     </div>
-    )
+  );
 }
 
-export default Register
+export default Register;
