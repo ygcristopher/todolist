@@ -14,4 +14,5 @@ router.post("/create-task/:userId", UserAuth, TasksController.createTask);
 router.get("/tasks/:userId", UserAuth, TasksController.getTasks);
 router.delete("/tasks/:userId", UserAuth, TasksController.taskDelete);
 router.put("/tasks/:userId", UserAuth, TasksController.taskCompleted);
+router.put("/edit-tasks/:userId", UserAuth, TasksController.editTask);
 export default router;
