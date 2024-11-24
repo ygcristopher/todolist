@@ -75,7 +75,6 @@ class TasksController {
     const { id, title, description } = req.body;
     const userId = req.user?.id;
 
-    console.log(req.body, userId);
     try {
       if (!userId) {
         return res.status(401).json({ message: "Token não fornecido" });
