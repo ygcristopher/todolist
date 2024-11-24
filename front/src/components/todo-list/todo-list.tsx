@@ -1,11 +1,12 @@
 "use client";
 
-import { Button } from "@/components-shadcn/ui/button";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import TaskItem from "./task-item";
 import CreateTaskModal from "./create-task-modal";
 import { jwtDecode } from "jwt-decode";
+import Header from "../header/header";
 
 interface Task {
   id: number;
@@ -18,6 +19,8 @@ function TodoList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     const getToken = localStorage.getItem("token");
@@ -35,41 +38,79 @@ function TodoList() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`http://localhost:3003/tasks/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      const response = await axios.get(
+        `http://localhost:3003/tasks/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const tasksData = response.data;
       setTasks(tasksData);
-
+      setFilteredTasks(tasksData);
     } catch (error) {
       console.error("Erro ao buscar tarefas:", error);
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    filterTasks(e.target.value);
+  };
+
+  // Filter tasks based on the search term
+  const filterTasks = (term: string) => {
+    if (!term) {
+      setFilteredTasks(tasks); // Show all tasks if the search term is empty
+    } else {
+      const filtered = tasks.filter(
+        (task) =>
+          task.title.toLowerCase().includes(term.toLowerCase()) ||
+          task.description.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredTasks(filtered);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 flex flex-col gap-4">
+      <div>
+        <Header />
+      </div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Minha ToDo List</h1>
         <Button onClick={() => setIsModalOpen(true)}>Adicionar Tarefa</Button>
       </div>
-     
-        {/* Modal de criação de tarefas */}
-        {isModalOpen && (
-          <CreateTaskModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onTaskCreated={fetchTasks}
-          />
-        )}
 
-      <div className="space-y-4">
-        {tasks.map((task) => (
-          <TaskItem key={task.id} task={task} fetchTasks={fetchTasks} />
-        ))}
+      <div className="mb-4">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Buscar tarefa..."
+          className="p-2 rounded-md bg-gray-100 w-full"
+        />
       </div>
 
+      {/* Modal de criação de tarefas */}
+      {isModalOpen && (
+        <CreateTaskModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onTaskCreated={fetchTasks}
+        />
+      )}
+
+      <div className="space-y-4">
+        {filteredTasks.length === 0 ? (
+          <p className="text-gray-500">Nenhuma tarefa encontrada.</p>
+        ) : (
+          filteredTasks.map((task) => (
+            <TaskItem key={task.id} task={task} fetchTasks={fetchTasks} />
+          ))
+        )}
+      </div>
     </div>
   );
 }
