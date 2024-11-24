@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components-shadcn/ui/button";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
