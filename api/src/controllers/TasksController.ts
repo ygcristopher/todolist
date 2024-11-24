@@ -35,6 +35,41 @@ class TasksController {
       return res.status(500).json({ message: "Erro ao buscar tarefas" });
     }
   }
+
+  async taskDelete(req: Request, res: Response) {
+    const { taskId } = req.body
+    const userId = req.user?.id;
+
+    try {
+      if (!userId) {
+        return res.status(401).json({ message: "Token não fornecido" });
+      }
+
+      await TaskService.taskDelete(userId, taskId);
+      return res.status(200).json({ message: "Tarefa deletada com sucesso" });
+    } catch (error) {
+      console.error("Erro ao deletar tarefa:", error);
+      return res.status(500).json({ message: "Erro ao deletar tarefa" });
+    }
+  }
+
+  async taskCompleted(req: Request, res: Response) {
+    const { taskId } = req.body;
+    const userId = req.user?.id;
+
+    try {
+      if (!userId) {
+        return res.status(401).json({ message: "Token não fornecido" });
+      }
+
+      await TaskService.taskCompleted(userId, taskId);
+      return res.status(200).json({ message: "Tarefa concluída com sucesso" });
+    } catch (error) {
+      console.error("Erro ao concluir tarefa:", error);
+      return res.status(500).json({ message: "Erro ao concluir tarefa"
+  })
+    }
+  }
 }
 
 export default new TasksController();
