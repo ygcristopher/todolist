@@ -70,6 +70,24 @@ class TasksController {
   })
     }
   }
+
+  async editTask(req: Request, res: Response) {
+    const { id, title, description } = req.body;
+    const userId = req.user?.id;
+
+    console.log(req.body, userId);
+    try {
+      if (!userId) {
+        return res.status(401).json({ message: "Token não fornecido" });
+      }
+
+      await TaskService.editTask(userId, id, title, description);
+      return res.status(200).json({ message: "Tarefa editada com sucesso" });
+    } catch (error) {
+      console.error("Erro ao editar tarefa:", error);
+      return res.status(500).json({ message: "Erro ao editar tarefa" });
+  }
+}
 }
 
 export default new TasksController();
