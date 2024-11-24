@@ -12,4 +12,6 @@ router.post("/login-user", UserController.loginUser);
 // Task routes
 router.post("/create-task/:userId", UserAuth, TasksController.createTask);
 router.get("/tasks/:userId", UserAuth, TasksController.getTasks);
+router.delete("/tasks/:userId", UserAuth, TasksController.taskDelete);
+router.put("/tasks/:userId", UserAuth, TasksController.taskCompleted);
 export default router;
