@@ -2,7 +2,7 @@ import knex from "../../database/connection";
 import bcrypt from "bcryptjs";
 
 class UserService {
-  async createUser(id: string, name: string, email: string, password: string) {
+  async createUser(id: string, name: string, email: string, password: string, bg_profile: string) {
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -12,6 +12,7 @@ class UserService {
         name,
         email,
         password: hashedPassword,
+        bg_profile,
       });
     } catch (error) {
       console.log(error);
