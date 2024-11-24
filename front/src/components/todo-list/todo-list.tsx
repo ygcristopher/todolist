@@ -40,8 +40,9 @@ function TodoList() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
-      console.log(response.data);
-      setTasks(response.data);
+      const tasksData = response.data;
+      setTasks(tasksData);
+
     } catch (error) {
       console.error("Erro ao buscar tarefas:", error);
     }
