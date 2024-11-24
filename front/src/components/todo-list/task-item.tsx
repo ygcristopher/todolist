@@ -1,8 +1,10 @@
-// components/TaskItem.tsx
-import { useState } from "react";
+"use client"
+
+import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components-shadcn/ui/button";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 interface Task {
   id: number;
@@ -16,12 +18,30 @@ interface TaskItemProps {
   fetchTasks: () => void;
 }
 
-const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
+const TaskItem = ({ task, fetchTasks,  }: TaskItemProps) => {
   const [isCompleted, setIsCompleted] = useState(task.completed);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getToken = localStorage.getItem("token");
+    if (getToken) {
+      const user = jwtDecode<{ id: string }>(getToken);
+      setUserId(user.id);
+    }
+  }, []);
 
   const toggleCompleted = async () => {
     try {
-      await axios.put(`/api/tasks/${task.id}`, { completed: !isCompleted });
+      await axios.put(
+        `http://localhost:3003/tasks/${userId}`,  
+        { completed: !isCompleted, taskId: task.id }, 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+  
       setIsCompleted(!isCompleted);
       fetchTasks();
     } catch (error) {
@@ -31,7 +51,12 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
 
   const deleteTask = async () => {
     try {
-      await axios.delete(`/api/tasks/${task.id}`);
+      await axios.delete(`http://localhost:3003/tasks/${userId}`, {
+        data: { taskId: task.id },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      });
       fetchTasks();
     } catch (error) {
       console.error("Erro ao deletar tarefa:", error);
