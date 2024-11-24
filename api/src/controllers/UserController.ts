@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import UserService from "../services/UserService";
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
+import { getRandomProfileColor } from "../models/randomBgColor";
 
 config()
 
@@ -11,13 +12,15 @@ const access_token = process.env.ACCESS_TOKEN_SECRET;
 class UserController {
   async createUser(req: Request, res: Response) {
     const { name, email, password } = req.body;
+    const bg_profile = getRandomProfileColor();
 
     try {
       const user = await UserService.createUser(
         uuidv4(),
         name,
         email,
-        password
+        password,
+        bg_profile
       );
 
       return res.status(201).json(user);
@@ -43,7 +46,7 @@ class UserController {
       }
   
       const token = jwt.sign(
-        { id: userEmail.id, email: userEmail.email },
+        { id: userEmail.id, email: userEmail.email, name: userEmail.name, bg_profile: userEmail.bg_profile },
         access_token || "", 
         { expiresIn: "1h" } 
       );
