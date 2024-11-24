@@ -37,6 +37,16 @@ class UserService {
       console.log(error);
     }
   }
+
+  async getUserByEmail(email: string) {
+    try {
+      const user = await knex("users").where("email", email).first();
+
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default new UserService();
