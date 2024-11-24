@@ -55,7 +55,6 @@ class TaskService {
 
     async editTask(userId: string, id: string, title: string, description: string) {
         try {
-            console.log(id);
         await knex("tasks")
             .update({ title, description })
             .where("user_id", userId)
