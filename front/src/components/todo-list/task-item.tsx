@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "../ui/input";
 
 interface Task {
   id: number;
@@ -196,7 +197,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-left">Título</TableHead>
+              <TableHead className="text-left w-52">Título</TableHead>
               <TableHead className="text-left w-52">Descrição</TableHead>
               <TableHead className="text-left">Prioridade</TableHead>
             </TableRow>
@@ -210,7 +211,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
               >
                 {task.title}
               </TableCell>
-              <TableCell className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
+              <TableCell className="max-w-xs break-words">
                 {task.description}
               </TableCell>
               <TableCell
@@ -223,86 +224,98 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
             </TableRow>
           </TableBody>
         </Table>
-      </div>
 
-      <div className="flex space-x-2 flex-col gap-2 items-center justify-center">
-        {/* Dialog for Edit Task */}
-        <div>
-          <Dialog open={isEditing} onOpenChange={setIsEditing}>
-            <DialogTrigger asChild className="flex items-center justify-center">
-              <Button variant="outline" className="w-40">
-                Editar
-              </Button>
-            </DialogTrigger>
-            <DialogPortal>
-              <DialogOverlay className="fixed inset-0 bg-black/50" />
-              <DialogContent className="fixed bg-white p-4 rounded shadow-lg max-w-md w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <DialogTitle>Editar Tarefa</DialogTitle>
-                <form className="flex flex-col space-y-4">
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="border p-2 rounded"
-                    placeholder="Título da Tarefa"
-                  />
-                  <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="border p-2 rounded"
-                    placeholder="Descrição da Tarefa"
-                  />
-                  <div className="flex space-x-2">
-                    <Button variant="outline" onClick={editTask}>
-                      Salvar
+        <div className="flex space-x-2 flex-col gap-2 items-center justify-center">
+          {/* Dialog for Edit Task */}
+          <div>
+            <Dialog open={isEditing} onOpenChange={setIsEditing}>
+              <DialogTrigger
+                asChild
+                className="flex items-center justify-center"
+              >
+                <Button variant="outline" className="w-40">
+                  Editar
+                </Button>
+              </DialogTrigger>
+              <DialogPortal>
+                <DialogOverlay className="fixed inset-0 bg-black/50" />
+                <DialogContent className="fixed bg-white p-4 rounded shadow-lg max-w-md w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <DialogTitle className="text-center mb-4">Editar Tarefa</DialogTitle>
+                  <form className="flex flex-col space-y-4">
+                    <div>
+                      <label className="text-sm">Título</label>
+                      <Input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="border p-2 rounded"
+                        placeholder="Título da Tarefa"
+                      />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <label className="text-sm">Descrição</label>
+                      <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="border p-2 rounded resize-none"
+                        placeholder="Descrição da Tarefa"
+                      />
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button variant="outline" onClick={editTask}>
+                        Salvar
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => setIsEditing(false)}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </DialogPortal>
+            </Dialog>
+          </div>
+
+          {/* Dialog for Confirm Delete */}
+          <div>
+            <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+              <DialogTrigger asChild>
+                <Button variant="destructive" className="w-full md:w-40">
+                  Excluir
+                </Button>
+              </DialogTrigger>
+
+              <DialogPortal>
+                <DialogOverlay className="fixed inset-0 bg-black/50" />
+                <DialogContent className="fixed bg-white p-4 rounded shadow-lg max-w-md w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <DialogTitle className="text-center">Confirmar Exclusão</DialogTitle>
+                  <DialogDescription className="text-center">
+                    Tem certeza de que deseja excluir esta tarefa?
+                  </DialogDescription>
+                  <div className="flex space-x-4 mt-4 items-center justify-center">
+                    <Button variant="destructive" onClick={deleteTask}>
+                      Sim
                     </Button>
                     <Button
-                      variant="destructive"
-                      onClick={() => setIsEditing(false)}
+                      variant="outline"
+                      onClick={() => setConfirmDelete(false)}
                     >
-                      Cancelar
+                      Não
                     </Button>
                   </div>
-                </form>
-              </DialogContent>
-            </DialogPortal>
-          </Dialog>
-        </div>
+                </DialogContent>
+              </DialogPortal>
+            </Dialog>
+          </div>
 
-        {/* Dialog for Confirm Delete */}
-        <div>
-          <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-            <DialogTrigger asChild>
-              <Button variant="destructive" className="w-full md:w-40">
-                Excluir
-              </Button>
-            </DialogTrigger>
-
-            <DialogPortal>
-              <DialogOverlay className="fixed inset-0 bg-black/50" />
-              <DialogContent className="fixed bg-white p-4 rounded shadow-lg max-w-md w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <DialogTitle>Confirmar Exclusão</DialogTitle>
-                <DialogDescription>
-                  Tem certeza de que deseja excluir esta tarefa?
-                </DialogDescription>
-                <div className="flex space-x-4 mt-4">
-                  <Button variant="destructive" onClick={deleteTask}>
-                    Sim
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setConfirmDelete(false)}
-                  >
-                    Não
-                  </Button>
-                </div>
-              </DialogContent>
-            </DialogPortal>
-          </Dialog>
-        </div>
-
-        <div className="w-40 flex items-center justify-center">
-          <p className="text-left text-xs">Criado {timeAgo(task.created_at)}</p>
+          <div className="w-40 flex items-center justify-center">
+            <p className="text-left text-xs text-blue-500">
+              Criado {timeAgo(task.created_at)}
+            </p>
+          </div>
         </div>
       </div>
     </div>
