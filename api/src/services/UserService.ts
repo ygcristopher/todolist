@@ -15,37 +15,37 @@ class UserService {
         bg_profile,
       });
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 
   async loginUser(email: string, password: string) {
     try {
       const user = await knex("users").where("email", email).first();
-
+  
       if (!user) {
-        return { error: "User not found" };
+        throw new Error("User not found");
       }
-
-      const validPassword = await bcrypt.compare(password, user.password);
-
-      if (!validPassword) {
-        return { error: "Invalid password" };
+  
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new Error("Invalid password");
       }
-
+  
       return user;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
-
+  
   async getUserByEmail(email: string) {
     try {
-      const user = await knex("users").where("email", email).first();
+      const user = await knex("users").select('*').where("email", email).first();
+      console.log(user);
 
       return user;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 }
