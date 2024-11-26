@@ -23,9 +23,10 @@ class UserController {
         bg_profile
       );
 
-      return res.status(201).json(user);
+      return res.status(201).json({message: "Created Successfully", user});
     } catch (error) {
       console.log(error);
+      return res.status(500).json({ error: "Internal server error" });
     }
   }
 
@@ -34,16 +35,17 @@ class UserController {
   
     try {
       const userEmail = await UserService.getUserByEmail(email);
-  
+      
       if (!userEmail) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ error: "User not found" });
       }
   
       const user = await UserService.loginUser(email, password);
   
       if (!user) {
-        return res.status(401).json({ message: "Invalid credentials" });
+        return res.status(401).json({ error: "Invalid credentials" });
       }
+      //validar senha passada pelo usuário com a senha do banco
   
       const token = jwt.sign(
         { id: userEmail.id, email: userEmail.email, name: userEmail.name, bg_profile: userEmail.bg_profile },
@@ -51,10 +53,10 @@ class UserController {
         { expiresIn: "1h" } 
       );
   
-      return res.status(200).json({ user, token });
+      return res.status(200).json({ message:"Login successfully", user, token });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ error: "Internal server error" });
     }
   }
 }  
