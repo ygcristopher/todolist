@@ -82,7 +82,7 @@ function TodoList() {
   };
 
   return (
-    <div className="container mx-auto p-4 flex flex-col gap-4">
+    <div className="container mx-auto mt-0 flex flex-col gap-4">
       <div>
         <Header />
       </div>
@@ -115,7 +115,12 @@ function TodoList() {
           <p className="text-gray-500">Nenhuma tarefa encontrada.</p>
         ) : (
           filteredTasks.map((task) => (
-            <TaskItem key={task.id} task={task} fetchTasks={fetchTasks} priority={task.priority} />
+            <TaskItem
+              key={task.id}
+              task={task}
+              fetchTasks={fetchTasks}
+              priority={task.priority}
+            />
           ))
         )}
       </div>
