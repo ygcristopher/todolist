@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -7,38 +8,57 @@ import { FormEvent, useState } from "react";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter()
+  const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:3003/login-user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await fetch("http://localhost:3003/login-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
+      console.log(data);
 
-    if (data.error) {
-      alert(data.error);
-    } else {
+      if (data.error) {
+        toast({
+          title: "Error",
+          description: data.error || "An error occurred",
+          variant: "error",
+        });
+        return;
+      }
+
+      toast({
+        title: "Success",
+        description: data.message,
+        variant: "success",
+      });
+
       localStorage.setItem("token", data.token);
-      alert("Login successful");
       router.push("/todo-list");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Internal server error. Please try again later.",
+        variant: "error",
+      });
     }
-
-  }
+  };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
-  }
+  };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value);
-  }
+  };
 
   return (
     <div>
@@ -76,7 +96,12 @@ function Login() {
             </div>
 
             <div className="w-full flex items-center justify-center">
-                <h4>Dont have a account? <Link href="/register" className="text-blue-500">Click here</Link></h4>              
+              <h4>
+                Dont have a account?{" "}
+                <Link href="/register" className="text-blue-500">
+                  Click here
+                </Link>
+              </h4>
             </div>
 
             <div>
