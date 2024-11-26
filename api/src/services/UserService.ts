@@ -1,4 +1,4 @@
-import knex from "../../database/connection";
+import knex from "../database/connection";
 import bcrypt from "bcryptjs";
 
 class UserService {
