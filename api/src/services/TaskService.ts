@@ -1,4 +1,4 @@
-import knex from "../../database/connection";
+import knex from "../database/connection";
 
 class TaskService {
   async createTask(
