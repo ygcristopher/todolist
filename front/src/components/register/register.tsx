@@ -2,35 +2,43 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserRegister } from "@/models/validationSchemas";
 import Link from "next/link";
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const { toast } = useToast();
-
   const router = useRouter();
+  
+  type FormData = z.infer<typeof UserRegister>;
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>({
+    resolver: zodResolver(UserRegister),
+  });
 
+  async function handleRegister(data: FormData) {
     try {
       const response = await fetch("http://localhost:3003/create-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify(data),
       });
 
-      const data = await response.json();
+      const responseData = await response.json();
 
-      if (data.error) {
+      if (responseData.error) {
         toast({
           title: "Error",
-          description: data.error || "An error occurred",
+          description: responseData.error || "An error occurred",
           variant: "error",
         });
         return;
@@ -38,14 +46,12 @@ function Register() {
 
       toast({
         title: "Success",
-        description: data.message,
+        description: responseData.message,
         variant: "success",
       });
 
       if (response.status === 201) {
-        setEmail("");
-        setName("");
-        setPassword("");
+        reset();
         router.push("/");
       }
     } catch (error) {
@@ -56,18 +62,6 @@ function Register() {
         variant: "error",
       });
     }
-  }
-
-  function handleNameChange(e: FormEvent<HTMLInputElement>) {
-    setName(e.currentTarget.value);
-  }
-
-  function handleEmailChange(e: FormEvent<HTMLInputElement>) {
-    setEmail(e.currentTarget.value);
-  }
-
-  function handlePasswordChange(e: FormEvent<HTMLInputElement>) {
-    setPassword(e.currentTarget.value);
   }
 
   return (
@@ -83,7 +77,10 @@ function Register() {
               </Link>
             </h4>
           </div>
-          <form className="mt-4 space-y-6" onSubmit={handleSubmit}>
+          <form
+            className="mt-4 space-y-6"
+            onSubmit={handleSubmit(handleRegister)}
+          >
             <div>
               <label
                 htmlFor="name"
@@ -94,8 +91,13 @@ function Register() {
               <input
                 type="text"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                onChange={handleNameChange}
+                {...register("name")}
               />
+              {errors.name && (
+                <span className="text-xs text-red-500">
+                  {errors.name.message}
+                </span>
+              )}
             </div>
 
             <div>
@@ -108,8 +110,13 @@ function Register() {
               <input
                 type="email"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                onChange={handleEmailChange}
+                {...register("email")}
               />
+              {errors.email && (
+                <span className="text-xs text-red-500">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
 
             <div>
@@ -122,8 +129,13 @@ function Register() {
               <input
                 type="password"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                onChange={handlePasswordChange}
+                {...register("password")}
               />
+              {errors.password && (
+                <span className="text-xs text-red-500">
+                  {errors.password.message}
+                </span>
+              )}
             </div>
             <div>
               <button
