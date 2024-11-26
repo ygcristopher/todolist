@@ -13,6 +13,8 @@ interface Task {
   title: string;
   description: string;
   completed: boolean;
+  created_at: string;
+  priority: "BAIXA" | "MEDIA" | "ALTA";
 }
 
 function TodoList() {
@@ -21,6 +23,7 @@ function TodoList() {
   const [userId, setUserId] = useState<string | null>(null);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [priority, setPriority] = useState<string>("");
 
   useEffect(() => {
     const getToken = localStorage.getItem("token");
@@ -47,6 +50,12 @@ function TodoList() {
         }
       );
       const tasksData = response.data;
+
+      const priorities = tasksData.map(
+        (task: { priority: string }) => task.priority
+      );
+
+      setPriority(priorities);
       setTasks(tasksData);
       setFilteredTasks(tasksData);
     } catch (error) {
@@ -59,10 +68,9 @@ function TodoList() {
     filterTasks(e.target.value);
   };
 
-  // Filter tasks based on the search term
   const filterTasks = (term: string) => {
     if (!term) {
-      setFilteredTasks(tasks); // Show all tasks if the search term is empty
+      setFilteredTasks(tasks);
     } else {
       const filtered = tasks.filter(
         (task) =>
@@ -79,7 +87,7 @@ function TodoList() {
         <Header />
       </div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Minha ToDo List</h1>
+        <h1 className="text-2xl font-bold">Adicione uma tarefa</h1>
         <Button onClick={() => setIsModalOpen(true)}>Adicionar Tarefa</Button>
       </div>
 
@@ -107,7 +115,7 @@ function TodoList() {
           <p className="text-gray-500">Nenhuma tarefa encontrada.</p>
         ) : (
           filteredTasks.map((task) => (
-            <TaskItem key={task.id} task={task} fetchTasks={fetchTasks} />
+            <TaskItem key={task.id} task={task} fetchTasks={fetchTasks} priority={task.priority} />
           ))
         )}
       </div>
