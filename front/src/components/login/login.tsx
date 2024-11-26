@@ -1,18 +1,30 @@
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
+import { UserLogin } from "@/models/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import Link from "next/link";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  type FormData = z.infer<typeof UserLogin>;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>({
+    resolver: zodResolver(UserLogin),
+  });
+
+  const handleLogin = async (data: FormData) => {
 
     try {
       const response = await fetch("http://localhost:3003/login-user", {
@@ -20,15 +32,15 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
-      });
+        body: JSON.stringify(data),
+        });
 
-      const data = await response.json();
+      const loginData = await response.json();
 
-      if (data.error) {
+      if (loginData.error) {
         toast({
           title: "Error",
-          description: data.error || "An error occurred",
+          description: loginData.error || "An error occurred",
           variant: "error",
         });
         return;
@@ -36,11 +48,12 @@ function Login() {
 
       toast({
         title: "Success",
-        description: data.message,
+        description: loginData.message,
         variant: "success",
       });
 
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", loginData.token);
+      reset();
       router.push("/todo-list");
     } catch (error) {
       toast({
@@ -51,20 +64,12 @@ function Login() {
     }
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.currentTarget.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.currentTarget.value);
-  };
-
   return (
     <div>
       <div className="bg-gray-100 min-h-screen flex items-center justify-center">
         <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
           <h1 className="text-2xl font-semibold text-center">Login</h1>
-          <form className="mt-4 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-4 space-y-6" onSubmit={handleSubmit(handleLogin)}>
             <div>
               <label
                 htmlFor="email"
@@ -76,8 +81,13 @@ function Login() {
                 type="email"
                 id="email"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                onChange={handleEmailChange}
+                {...register("email")}
               />
+              {errors.email && (
+                <span className="text-xs text-red-500">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
             <div>
               <label
@@ -90,8 +100,13 @@ function Login() {
                 type="password"
                 id="password"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                onChange={handlePasswordChange}
+                {...register("password")}
               />
+              {errors.password && (
+                <span className="text-xs text-red-500">
+                  {errors.password.message}
+                </span>
+              )}
             </div>
 
             <div className="w-full flex items-center justify-center">
