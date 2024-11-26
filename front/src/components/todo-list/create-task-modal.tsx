@@ -9,9 +9,9 @@ import {
 } from "@radix-ui/react-dialog";
 import { Input } from "../ui/input";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 interface CreateTaskModalProps {
   isOpen: boolean;
