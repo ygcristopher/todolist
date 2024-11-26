@@ -1,13 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { toast } = useToast();
 
   const router = useRouter();
 
@@ -23,16 +25,36 @@ function Register() {
         body: JSON.stringify({ name, email, password }),
       });
 
+      const data = await response.json();
+
+      if (data.error) {
+        toast({
+          title: "Error",
+          description: data.error || "An error occurred",
+          variant: "error",
+        });
+        return;
+      }
+
+      toast({
+        title: "Success",
+        description: data.message,
+        variant: "success",
+      });
+
       if (response.status === 201) {
         setEmail("");
         setName("");
         setPassword("");
         router.push("/");
       }
-
-      console.log(response);
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Error",
+        description: "Internal server error. Please try again later.",
+        variant: "error",
+      });
     }
   }
 
