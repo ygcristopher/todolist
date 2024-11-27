@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import { getRandomProfileColor } from "../models/randomBgColor";
 
-config()
+config();
 
 const access_token = process.env.ACCESS_TOKEN_SECRET;
 
@@ -23,7 +23,7 @@ class UserController {
         bg_profile
       );
 
-      return res.status(201).json({message: "Created Successfully", user});
+      return res.status(201).json({ message: "Created Successfully", user });
     } catch (error) {
       return res.status(500).json({ error: "Internal server error" });
     }
@@ -31,10 +31,10 @@ class UserController {
 
   async loginUser(req: Request, res: Response) {
     const { email, password } = req.body;
-  
+
     try {
       const user = await UserService.loginUser(email, password);
-  
+
       const token = jwt.sign(
         {
           id: user.id,
@@ -43,16 +43,17 @@ class UserController {
           bg_profile: user.bg_profile,
         },
         access_token || "",
-        { expiresIn: "1h" }
+        { expiresIn: "15d" }
       );
-  
-      return res.status(200).json({ message: "Login successfully", user, token });
+
+      return res
+        .status(200)
+        .json({ message: "Login successfully", user, token });
     } catch (error: any) {
       const errorMessage = error.message || "Internal server error";
       return res.status(406).json({ error: errorMessage });
     }
   }
-  
-}  
+}
 
 export default new UserController();
