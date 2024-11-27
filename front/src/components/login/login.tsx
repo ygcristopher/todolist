@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
+import api from "@/utils/interceptor";
 
 function Login() {
-
   const router = useRouter();
   const { toast } = useToast();
 
@@ -25,18 +25,11 @@ function Login() {
   });
 
   const handleLogin = async (data: FormData) => {
-
     try {
-      const response = await fetch("http://localhost:3003/login-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        });
-
-      const loginData = await response.json();
-
+      const response = await api.post("/login-user", data);
+      const loginData = response.data;
+      console.log(loginData);
+      
       if (loginData.error) {
         toast({
           title: "Error",
@@ -51,7 +44,7 @@ function Login() {
         description: loginData.message,
         variant: "success",
       });
-
+      
       localStorage.setItem("token", loginData.token);
       reset();
       router.push("/todo-list");
