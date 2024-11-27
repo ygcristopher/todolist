@@ -11,7 +11,6 @@ import { Input } from "../ui/input";
 import { Button } from "@/components/ui/button";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@/hooks/use-toast";
-import axios from "axios";
 import api from "@/utils/interceptor";
 
 interface CreateTaskModalProps {
@@ -42,7 +41,8 @@ const CreateTaskModal = ({
 
   const createTask = async () => {
     try {
-      const response = await api.post(`/create-task/${userId}`,
+      const response = await api.post(
+        `/create-task/${userId}`,
         { title, description, priority },
         {
           headers: {
@@ -93,27 +93,29 @@ const CreateTaskModal = ({
             placeholder="Título"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            className="border-2 p-2 rounded text-black bg-white"
           />
           <Input
             placeholder="Descrição"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            className="border-2 p-2 rounded text-black bg-white"
           />
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            className="p-2 rounded-md bg-gray-100 w-full"
+            className="p-2 rounded bg-gray-100 w-full"
           >
             <option value="">Selecione a prioridade</option>
-            <option value="BAIXA">BAIXA</option>
-            <option value="MÉDIA">MÉDIA</option>
-            <option value="ALTA">ALTA</option>
+            <option value="BAIXA" className="bg-green-200">BAIXA</option>
+            <option value="MÉDIA" className="bg-yellow-200">MÉDIA</option>
+            <option value="ALTA" className="bg-red-200">ALTA</option>
           </select>
           <div className="flex justify-end space-x-2">
             <Button variant="outline" onClick={onClose}>
               Cancelar
             </Button>
-            <Button onClick={createTask} disabled={!title || !description}>
+            <Button onClick={createTask} disabled={!title || !description || !priority}>
               Salvar
             </Button>
           </div>
