@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import timeAgo from "@/models/formatTimeAgo";
 import { useToast } from "@/hooks/use-toast";
@@ -25,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "../ui/input";
+import api from "@/utils/interceptor";
 
 interface Task {
   id: number;
@@ -51,9 +51,9 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
   const { toast } = useToast();
 
   const priorityColors = {
-    BAIXA: "bg-green-200", // Cor para prioridade baixa
-    MÉDIA: "bg-yellow-200", // Cor para prioridade média
-    ALTA: "bg-red-200", // Cor para prioridade alta
+    BAIXA: "bg-green-200",
+    MÉDIA: "bg-yellow-200",
+    ALTA: "bg-red-200",
   };
 
   useEffect(() => {
@@ -66,8 +66,8 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
 
   const toggleCompleted = async () => {
     try {
-      const response = await axios.put(
-        `http://localhost:3003/tasks/${userId}`,
+      const response = await api.put(
+        `/tasks/${userId}`,
         { completed: !isCompleted, taskId: task.id },
         {
           headers: {
@@ -107,15 +107,12 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
 
   const deleteTask = async () => {
     try {
-      const response = await axios.delete(
-        `http://localhost:3003/tasks/${userId}`,
-        {
-          data: { taskId: task.id },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await api.delete(`/tasks/${userId}`, {
+        data: { taskId: task.id },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       const data = response.data;
 
@@ -147,8 +144,8 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
 
   const editTask = async () => {
     try {
-      const response = await axios.put(
-        `http://localhost:3003/edit-tasks/${userId}`,
+      const response = await api.put(
+        `/edit-tasks/${userId}`,
         {
           id: task.id,
           title,
@@ -240,7 +237,9 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
               <DialogPortal>
                 <DialogOverlay className="fixed inset-0 bg-black/50" />
                 <DialogContent className="fixed bg-white p-4 rounded shadow-lg max-w-md w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <DialogTitle className="text-center mb-4">Editar Tarefa</DialogTitle>
+                  <DialogTitle className="text-center mb-4">
+                    Editar Tarefa
+                  </DialogTitle>
                   <form className="flex flex-col space-y-4">
                     <div>
                       <label className="text-sm">Título</label>
@@ -291,7 +290,9 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
               <DialogPortal>
                 <DialogOverlay className="fixed inset-0 bg-black/50" />
                 <DialogContent className="fixed bg-white p-4 rounded shadow-lg max-w-md w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <DialogTitle className="text-center">Confirmar Exclusão</DialogTitle>
+                  <DialogTitle className="text-center">
+                    Confirmar Exclusão
+                  </DialogTitle>
                   <DialogDescription className="text-center">
                     Tem certeza de que deseja excluir esta tarefa?
                   </DialogDescription>
