@@ -26,7 +26,8 @@ class TaskService {
 
   async getTasks(userId: string) {
     try {
-      const tasks = await knex("tasks").select("*").where("user_id", userId);
+      const tasks = await knex("tasks").select("*").where("user_id", userId).orderBy("created_at", "desc");
+      
       return tasks;
     } catch (error) {
       console.log(error);
