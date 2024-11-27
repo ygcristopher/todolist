@@ -59,7 +59,7 @@ class TasksController {
   }
 
   async taskCompleted(req: Request, res: Response) {
-    const { taskId } = req.body;
+    const { taskId, completed } = req.body;
     const userId = req.user?.id;
 
     try {
@@ -67,7 +67,7 @@ class TasksController {
         return res.status(401).json({ error: "Token not found" });
       }
 
-      await TaskService.taskCompleted(userId, taskId);
+      await TaskService.taskCompleted(userId, taskId, completed);
       return res.status(200).json({ message: "Task complete success" });
     } catch (error) {
       return res.status(500).json({ error: "Error complete task" });
