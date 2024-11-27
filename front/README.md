@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Todo API Frontend
 
-## Getting Started
+Este é o frontend de um aplicativo de lista de tarefas (todo app), desenvolvido utilizando **Next.js**, **React** e outras bibliotecas modernas. A aplicação foi construída para ser rápida, acessível e fácil de manter, utilizando as mais recentes práticas em desenvolvimento web.
 
-First, run the development server:
+## Versão
+- **Versão**: 0.1.0
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Descrição
+Este frontend foi criado com o framework **Next.js** e utiliza React para construir a interface. A aplicação interage com a API backend para fornecer funcionalidades de cadastro, login, e gerenciamento de tarefas. Além disso, utiliza **Tailwind CSS** para o estilo e **React Hook Form** para o gerenciamento de formulários.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tecnologias
+- **Next.js**: Framework para React para a construção de aplicações com renderização no lado do servidor (SSR) ou estática (SSG).
+- **React**: Biblioteca JavaScript para construção de interfaces de usuário.
+- **Tailwind CSS**: Framework utilitário para criação de layouts responsivos e design rápido.
+- **Zod**: Validação de dados, utilizado para garantir a integridade dos dados no frontend.
+- **Axios**: Cliente HTTP para realizar requisições à API.
+- **JWT Decode**: Para decodificar tokens JWT no frontend.
+- **Radix UI**: Componentes acessíveis para construção de interfaces de usuário.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Instalação
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Requisitos
+- Node.js (versão >=v18.19.0)
+- NPM ou Yarn
 
-## Learn More
+### Passos para instalar
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone este repositório:
+   git clone https://github.com/ygcristopher/todolist
+   cd front
+2. Instale as dependências: `npm install`
+3. Rode o servidor: `npm run dev`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Este projeto está licenciado sob a Licença ISC. Consulte o arquivo LICENSE para mais detalhes.
