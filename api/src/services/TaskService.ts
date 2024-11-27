@@ -44,10 +44,10 @@ class TaskService {
     }
   }
 
-  async taskCompleted(userId: string, taskId: string) {
+  async taskCompleted(userId: string, taskId: string, completed: boolean) {
     try {
       await knex("tasks")
-        .update({ completed: 1 })
+        .update({ completed: completed ? 1 : 0 })
         .where("user_id", userId)
         .andWhere("id", taskId);
     } catch (error) {
@@ -55,16 +55,21 @@ class TaskService {
     }
   }
 
-    async editTask(userId: string, id: string, title: string, description: string) {
-        try {
-        await knex("tasks")
-            .update({ title, description })
-            .where("user_id", userId)
-            .andWhere("id", id)
-        } catch (error) {
-        console.log(error);
-        }
+  async editTask(
+    userId: string,
+    id: string,
+    title: string,
+    description: string
+  ) {
+    try {
+      await knex("tasks")
+        .update({ title, description })
+        .where("user_id", userId)
+        .andWhere("id", id);
+    } catch (error) {
+      console.log(error);
     }
+  }
 }
 
 export default new TaskService();
