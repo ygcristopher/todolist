@@ -8,6 +8,28 @@ import CreateTaskModal from "./create-task-modal";
 import { jwtDecode } from "jwt-decode";
 import Header from "../header/header";
 import { CircularProgress } from "../circular-progress/circular-progress";
+import { Input } from "../ui/input";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import { ChevronDown } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
 
 interface Task {
   id: number;
@@ -25,6 +47,9 @@ function TodoList() {
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [tasksPerPage] = useState(5);
 
   useEffect(() => {
     const getToken = localStorage.getItem("token");
@@ -80,6 +105,33 @@ function TodoList() {
     }
   };
 
+  const filterByPriority = (priority: string | null) => {
+    setPriorityFilter(priority);
+    if (priority) {
+      const filtered = tasks.filter((task) => task.priority === priority);
+      setFilteredTasks(filtered);
+    } else {
+      setFilteredTasks(tasks);
+    }
+  };
+
+  const getPriorityText = () => {
+    if (!priorityFilter) return "Filtro de Prioridade";
+    return priorityFilter === "BAIXA"
+      ? "Baixa"
+      : priorityFilter === "MEDIA"
+      ? "Média"
+      : "Alta";
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const indexOfLastTask = currentPage * tasksPerPage;
+  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+  const currentTasks = filteredTasks.slice(indexOfFirstTask, indexOfLastTask);
+
   return (
     <div className="container mx-auto mt-0 flex flex-col gap-4">
       <div>
@@ -90,14 +142,91 @@ function TodoList() {
         <Button onClick={() => setIsModalOpen(true)}>Adicionar Tarefa</Button>
       </div>
 
-      <div className="mb-4">
-        <input
+      <div className="mb-4 flex gap-8">
+        <Input
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
           placeholder="Buscar tarefa..."
-          className="p-2 rounded-md bg-gray-100 w-full"
+          className="border-2 p-2 rounded text-black bg-white w-full"
         />
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto w-40">
+              {getPriorityText()} <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="center"
+            className="w-40 rounded bg-black/80 text-white p-2 cursor-pointer"
+          >
+            <DropdownMenuItem
+              className="text-green-200"
+              onClick={() => filterByPriority("BAIXA")}
+            >
+              Baixa
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-yellow-200"
+              onClick={() => filterByPriority("MÉDIA")}
+            >
+              Média
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-200"
+              onClick={() => filterByPriority("ALTA")}
+            >
+              Alta
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => filterByPriority(null)}>
+              Todos
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (currentPage > 1) handlePageChange(currentPage - 1);
+                }}
+              />
+            </PaginationItem>
+            {[...Array(Math.ceil(filteredTasks.length / tasksPerPage))].map(
+              (_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    href="#"
+                    isActive={currentPage === index + 1}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(index + 1);
+                    }}
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            )}
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (
+                    currentPage < Math.ceil(filteredTasks.length / tasksPerPage)
+                  )
+                    handlePageChange(currentPage + 1);
+                }}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
 
       {/* Modal de criação de tarefas */}
@@ -109,15 +238,15 @@ function TodoList() {
         />
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-4 mb-14">
         {loading ? (
           <div className="flex justify-center items-center h-screen">
             <CircularProgress />
           </div>
-        ) : filteredTasks.length === 0 ? (
+        ) : currentTasks.length === 0 ? (
           <p className="text-gray-500">Nenhuma tarefa encontrada.</p>
         ) : (
-          filteredTasks.map((task) => (
+          currentTasks.map((task) => (
             <TaskItem
               key={task.id}
               task={task}
