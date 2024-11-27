@@ -33,6 +33,7 @@ interface Task {
   completed: boolean;
   created_at: string;
   priority: "BAIXA" | "MEDIA" | "ALTA";
+  category: string;
 }
 
 interface TaskItemProps {
@@ -196,6 +197,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
             <TableRow>
               <TableHead className="text-left w-52">Título</TableHead>
               <TableHead className="text-left w-52">Descrição</TableHead>
+              <TableHead className="text-left w-52">Categoria</TableHead>
               <TableHead className="text-left">Prioridade</TableHead>
             </TableRow>
           </TableHeader>
@@ -211,6 +213,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
               <TableCell className="max-w-xs break-words">
                 {task.description}
               </TableCell>
+              <TableCell className="max-w-xs break-words">{task.category}</TableCell>
               <TableCell
                 className={`font-semibold rounded w-24 h-5 text-center ${
                   priorityColors[task.priority as "BAIXA" | "MÉDIA" | "ALTA"]
