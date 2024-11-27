@@ -9,6 +9,8 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import Logo from "@/assets/logo.png";
 
 function Header() {
   const [initials, setInitials] = useState<string>("");
@@ -32,8 +34,8 @@ function Header() {
     window.location.href = "/";
   };
   return (
-    <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
-      <h1 className="text-2xl font-semibold">Todo App</h1>
+    <div className="bg-black/80 text-white p-8 flex justify-between items-center rounded">
+      <Image src={Logo} alt="logo.png" width={200} />
       <div>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger>
@@ -47,7 +49,7 @@ function Header() {
           <DropdownMenuContent
             side="left"
             align="start"
-            className="bg-white text-black rounded-lg shadow-lg p-2 w-26 cursor-pointer"
+            className="bg-white text-black rounded shadow-lg p-2 w-26 cursor-pointer"
           >
             <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
