@@ -75,7 +75,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
           },
         }
       );
-
+      console.log(!isCompleted)
       const data = response.data;
 
       if (data.error) {
@@ -313,7 +313,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
           </div>
 
           <div className="w-40 flex items-center justify-center">
-            <p className="text-left text-xs text-blue-500">
+            <p className="text-center text-xs text-blue-500">
               Criado {timeAgo(task.created_at)}
             </p>
           </div>
