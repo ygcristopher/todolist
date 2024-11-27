@@ -1,4 +1,4 @@
-# Todo API Frontend
+# Todo List Frontend
 
 Este é o frontend de um aplicativo de lista de tarefas (todo app), desenvolvido utilizando **Next.js**, **React** e outras bibliotecas modernas. A aplicação foi construída para ser rápida, acessível e fácil de manter, utilizando as mais recentes práticas em desenvolvimento web.
 
