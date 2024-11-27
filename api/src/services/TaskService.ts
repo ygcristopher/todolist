@@ -6,7 +6,8 @@ class TaskService {
     user_id: string,
     title: string,
     description: string,
-    priority: string
+    priority: string,
+    category: string,
   ) {
     try {
       await knex("tasks").insert({
@@ -15,6 +16,7 @@ class TaskService {
         title,
         description,
         priority,
+        category,
         created_at: new Date(),
         completed: 0,
       });
