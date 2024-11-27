@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import api from "@/utils/interceptor";
 
 interface CreateTaskModalProps {
   isOpen: boolean;
@@ -41,8 +42,7 @@ const CreateTaskModal = ({
 
   const createTask = async () => {
     try {
-      const response = await axios.post(
-        `http://localhost:3003/create-task/${userId}`,
+      const response = await api.post(`/create-task/${userId}`,
         { title, description, priority },
         {
           headers: {
