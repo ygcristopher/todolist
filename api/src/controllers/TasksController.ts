@@ -4,7 +4,7 @@ import TaskService from "../services/TaskService";
 
 class TasksController {
   async createTask(req: Request, res: Response) {
-    const { title, description, priority } = req.body;
+    const { title, description, priority, category } = req.body;
     const user_id = req.user?.id;
 
     try {
@@ -18,7 +18,8 @@ class TasksController {
         user_id,
         title,
         description,
-        priority
+        priority,
+        category
       );
       return res
         .status(201)
