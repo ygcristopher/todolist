@@ -8,11 +8,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserRegister } from "@/models/validationSchemas";
 import Link from "next/link";
 import api from "@/utils/interceptor";
+import Image from "next/image";
+import Logo from "@/assets/logo.png";
+import { Input } from "../ui/input";
 
 function Register() {
   const { toast } = useToast();
   const router = useRouter();
-  
+
   type FormData = z.infer<typeof UserRegister>;
 
   const {
@@ -26,7 +29,7 @@ function Register() {
 
   async function handleRegister(data: FormData) {
     try {
-      const response = await api.post("/create-user", data) 
+      const response = await api.post("/create-user", data);
 
       const responseData = response.data;
 
@@ -61,10 +64,12 @@ function Register() {
 
   return (
     <div>
-      <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-        <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
-          <h1 className="text-2xl font-semibold text-center">Register</h1>
-          <div className="w-full flex items-center justify-center mt-2">
+      <div className=" min-h-screen flex items-center justify-center">
+        <div className="w-full max-w-md p-4 bg-gray-700 rounded shadow-lg">
+          <div className="flex items-center justify-center mb-4">
+            <Image src={Logo} alt="logo.png" width={200} />
+          </div>
+          <div className="w-full flex items-center justify-center mt-2 text-white">
             <h4>
               Do you have an a account?{" "}
               <Link href="/" className="text-blue-500">
@@ -79,13 +84,14 @@ function Register() {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white"
               >
                 Name
               </label>
-              <input
+              <Input
                 type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                className="border-2 p-2 rounded text-black bg-white"
+                placeholder="Insert your name"
                 {...register("name")}
               />
               {errors.name && (
@@ -98,13 +104,14 @@ function Register() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white"
               >
                 Email
               </label>
-              <input
+              <Input
                 type="email"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                className="border-2 p-2 rounded text-black bg-white"
+                placeholder="Insert your email"
                 {...register("email")}
               />
               {errors.email && (
@@ -117,13 +124,14 @@ function Register() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white"
               >
                 Password
               </label>
-              <input
+              <Input
                 type="password"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                className="border-2 p-2 rounded text-black bg-white"
+                placeholder="******"
                 {...register("password")}
               />
               {errors.password && (
@@ -135,7 +143,7 @@ function Register() {
             <div>
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+                className="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
               >
                 Register
               </button>
