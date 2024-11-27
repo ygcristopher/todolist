@@ -10,15 +10,9 @@ import Header from "../header/header";
 import { CircularProgress } from "../circular-progress/circular-progress";
 import { Input } from "../ui/input";
 import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { ChevronDown } from "lucide-react";
@@ -38,6 +32,7 @@ interface Task {
   completed: boolean;
   created_at: string;
   priority: "BAIXA" | "MEDIA" | "ALTA";
+  category: string;
 }
 
 function TodoList() {
@@ -48,6 +43,7 @@ function TodoList() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [tasksPerPage] = useState(5);
 
@@ -124,8 +120,27 @@ function TodoList() {
       : "Alta";
   };
 
+  const getCategoryText = () => {
+    if (!categoryFilter) return "Filtro de Categoria";
+    return categoryFilter === "Codificação"
+      ? "Codificação"
+      : categoryFilter === "Revisão"
+      ? "Revisão"
+      : categoryFilter === "Gerenciamento"
+      ? "Gerenciamento"
+      : categoryFilter === "Deploy"
+      ? "Deploy"
+      : "Testes";
+  }
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const filterByCategory = (category: string | null) => {
+    setCategoryFilter(category);
+    const filtered = tasks.filter((task) => task.category === category);
+    setFilteredTasks(filtered);
   };
 
   const indexOfLastTask = currentPage * tasksPerPage;
@@ -180,6 +195,34 @@ function TodoList() {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => filterByPriority(null)}>
               Todos
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto w-40">
+              {getCategoryText()} <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="center"
+            className="w-40 rounded bg-black/80 text-white p-2 cursor-pointer"
+          >
+            <DropdownMenuItem onClick={() => filterByCategory("Codificação")}>
+              Codificação
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => filterByCategory("Revisão")}>
+              Revisão
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => filterByCategory("Gerenciamento")}>
+              Gerenciamento
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => filterByCategory("Deploy")}>
+              Deploy
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => filterByCategory("Testes")}>
+              Testes
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
