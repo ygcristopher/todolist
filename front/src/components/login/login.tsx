@@ -8,6 +8,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import api from "@/utils/interceptor";
+import Image from "next/image";
+import Logo from "@/assets/logo.png";
+import { Input } from "../ui/input";
 
 function Login() {
   const router = useRouter();
@@ -29,7 +32,7 @@ function Login() {
       const response = await api.post("/login-user", data);
       const loginData = response.data;
       console.log(loginData);
-      
+
       if (loginData.error) {
         toast({
           title: "Error",
@@ -44,7 +47,7 @@ function Login() {
         description: loginData.message,
         variant: "success",
       });
-      
+
       localStorage.setItem("token", loginData.token);
       reset();
       router.push("/todo-list");
@@ -59,21 +62,24 @@ function Login() {
 
   return (
     <div>
-      <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-        <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
-          <h1 className="text-2xl font-semibold text-center">Login</h1>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-full max-w-md p-4 bg-gray-700 rounded shadow-lg">
+          <div className="flex items-center justify-center mb-4">
+            <Image src={Logo} alt="logo.png" width={200} />
+          </div>
           <form className="mt-4 space-y-6" onSubmit={handleSubmit(handleLogin)}>
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white"
               >
                 Email
               </label>
-              <input
+              <Input
                 type="email"
                 id="email"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                placeholder="Inser your email"
+                className="border-2 p-2 rounded text-black bg-white"
                 {...register("email")}
               />
               {errors.email && (
@@ -85,14 +91,15 @@ function Login() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-white"
               >
                 Password
               </label>
-              <input
+              <Input
                 type="password"
                 id="password"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                placeholder="******"
+                className="border-2 p-2 rounded text-black bg-white"
                 {...register("password")}
               />
               {errors.password && (
@@ -102,7 +109,7 @@ function Login() {
               )}
             </div>
 
-            <div className="w-full flex items-center justify-center">
+            <div className="w-full flex items-center justify-center text-white">
               <h4>
                 Dont have a account?{" "}
                 <Link href="/register" className="text-blue-500">
