@@ -28,6 +28,7 @@ const CreateTaskModal = ({
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
+  const [category, setCategory] = useState("");
 
   const { toast } = useToast();
 
@@ -43,7 +44,7 @@ const CreateTaskModal = ({
     try {
       const response = await api.post(
         `/create-task/${userId}`,
-        { title, description, priority },
+        { title, description, priority, category },
         {
           headers: {
             "Content-Type": "application/json",
@@ -111,11 +112,25 @@ const CreateTaskModal = ({
             <option value="MÉDIA" className="bg-yellow-200">MÉDIA</option>
             <option value="ALTA" className="bg-red-200">ALTA</option>
           </select>
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="p-2 rounded bg-gray-100 w-full"
+            >
+            <option value="">Selecione a categoria</option>
+            <option value="Codificação">Codificação</option>
+            <option value="Revisão" >Revisão</option>
+            <option value="Gerenciamento">Gerenciamento</option>
+            <option value="Testes">Testes</option>
+            <option value="Deploy">Deploy</option>
+            </select>
+
           <div className="flex justify-end space-x-2">
             <Button variant="outline" onClick={onClose}>
               Cancelar
             </Button>
-            <Button onClick={createTask} disabled={!title || !description || !priority}>
+            <Button onClick={createTask} disabled={!title || !description || !priority || !category}>
               Salvar
             </Button>
           </div>
