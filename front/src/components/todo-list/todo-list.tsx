@@ -7,6 +7,7 @@ import TaskItem from "./task-item";
 import CreateTaskModal from "./create-task-modal";
 import { jwtDecode } from "jwt-decode";
 import Header from "../header/header";
+import { CircularProgress } from "../circular-progress/circular-progress";
 
 interface Task {
   id: number;
@@ -23,7 +24,7 @@ function TodoList() {
   const [userId, setUserId] = useState<string | null>(null);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [priority, setPriority] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getToken = localStorage.getItem("token");
@@ -40,6 +41,7 @@ function TodoList() {
   }, [userId]);
 
   const fetchTasks = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:3003/tasks/${userId}`,
@@ -51,15 +53,12 @@ function TodoList() {
       );
       const tasksData = response.data;
 
-      const priorities = tasksData.map(
-        (task: { priority: string }) => task.priority
-      );
-
-      setPriority(priorities);
       setTasks(tasksData);
       setFilteredTasks(tasksData);
     } catch (error) {
       console.error("Erro ao buscar tarefas:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -111,7 +110,11 @@ function TodoList() {
       )}
 
       <div className="space-y-4">
-        {filteredTasks.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center h-screen">
+            <CircularProgress />
+          </div>
+        ) : filteredTasks.length === 0 ? (
           <p className="text-gray-500">Nenhuma tarefa encontrada.</p>
         ) : (
           filteredTasks.map((task) => (
