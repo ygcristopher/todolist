@@ -8,6 +8,8 @@ Este é um projeto de API desenvolvido utilizando Node.js, TypeScript e diversos
 ## Descrição
 A API oferece funcionalidades essenciais para aplicações modernas, incluindo autenticação via JWT, conexão com bancos de dados (MySQL, SQLite), manipulação de senhas com bcryptjs, entre outros. Ela também é construída com TypeScript para garantir um código mais robusto e fácil de manter.
 
+O banco de dados **MySQL** é executado em um contêiner Docker, o que facilita a configuração e execução do ambiente de desenvolvimento.
+
 ## Tecnologias
 - **Node.js**: Ambiente de execução para JavaScript no servidor.
 - **TypeScript**: Superset do JavaScript que adiciona tipagem estática.
