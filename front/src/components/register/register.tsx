@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserRegister } from "@/models/validationSchemas";
 import Link from "next/link";
+import api from "@/utils/interceptor";
 
 function Register() {
   const { toast } = useToast();
@@ -25,15 +26,9 @@ function Register() {
 
   async function handleRegister(data: FormData) {
     try {
-      const response = await fetch("http://localhost:3003/create-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await api.post("/create-user", data) 
 
-      const responseData = await response.json();
+      const responseData = response.data;
 
       if (responseData.error) {
         toast({
