@@ -3,16 +3,16 @@ version: "3.8"
 services:
   mysql:
     image: mysql:5.7
-    container_name: mysql_db_new_project # Nome único para o contêiner
+    container_name: mysql_db_new_project
     environment:
       MYSQL_ROOT_PASSWORD: todolist1
       MYSQL_DATABASE: todolist1
       MYSQL_USER: todolist1
       MYSQL_PASSWORD: todolist1
     ports:
-      - "3307:3306"  # Mapeando para outra porta (3307) para não conflitar com o outro projeto
+      - "3307:3306"
     volumes:
-      - todolist_api_new:/var/lib/mysql # Volume único para o novo projeto
+      - todolist_api_new:/var/lib/mysql
 
 volumes:
-  todolist_api_new: # Volume único para o novo projeto
+  todolist_api_new:
