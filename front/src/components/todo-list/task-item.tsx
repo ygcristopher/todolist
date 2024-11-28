@@ -190,7 +190,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
 
   return (
     <div className="flex items-center justify-between p-4 border rounded shadow ">
-      <div className="flex items-center space-x-4 w-full">
+      <div className="flex items-center space-x-4 flex-col w-full lg:flex-row">
         <Checkbox checked={isCompleted} onCheckedChange={toggleCompleted} />
         <Table>
           <TableHeader>
@@ -233,7 +233,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
                 asChild
                 className="flex items-center justify-center"
               >
-                <Button variant="outline" className="w-40">
+                <Button variant="outline" className="lg:w-40">
                   Editar
                 </Button>
               </DialogTrigger>
@@ -285,7 +285,7 @@ const TaskItem = ({ task, fetchTasks }: TaskItemProps) => {
           <div>
             <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
               <DialogTrigger asChild>
-                <Button variant="destructive" className="w-full md:w-40">
+                <Button variant="destructive" className="w-full lg:w-40">
                   Excluir
                 </Button>
               </DialogTrigger>
