@@ -62,7 +62,7 @@ function Login() {
 
   return (
     <div>
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex p-6 items-center justify-center">
         <div className="w-full max-w-md p-4 bg-gray-700 rounded shadow-lg">
           <div className="flex items-center justify-center mb-4">
             <Image src={Logo} alt="logo.png" width={200} />
