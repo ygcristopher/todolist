@@ -131,7 +131,7 @@ function TodoList() {
       : categoryFilter === "Deploy"
       ? "Deploy"
       : "Testes";
-  }
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -152,80 +152,87 @@ function TodoList() {
       <div>
         <Header />
       </div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 flex-col gap-2 lg:flex-row">
         <h1 className="text-2xl font-bold">Adicione uma tarefa</h1>
         <Button onClick={() => setIsModalOpen(true)}>Adicionar Tarefa</Button>
       </div>
 
-      <div className="mb-4 flex gap-8">
-        <Input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Buscar tarefa..."
-          className="border-2 p-2 rounded text-black bg-white w-full"
-        />
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto w-40">
-              {getPriorityText()} <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="center"
-            className="w-40 rounded bg-black/80 text-white p-2 cursor-pointer"
-          >
-            <DropdownMenuItem
-              className="text-green-200"
-              onClick={() => filterByPriority("BAIXA")}
-            >
-              Baixa
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-yellow-200"
-              onClick={() => filterByPriority("MÉDIA")}
-            >
-              Média
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-red-200"
-              onClick={() => filterByPriority("ALTA")}
-            >
-              Alta
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => filterByPriority(null)}>
-              Todos
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="mb-4 flex flex-col items-center justify-center w-full gap-2 lg:flex-row">
+        <div className="w-full p-2 flex">
+          <Input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Buscar tarefa..."
+            className="border-2 p-2 rounded text-black bg-white w-full"
+          />
+        </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto w-40">
-              {getCategoryText()} <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="center"
-            className="w-40 rounded bg-black/80 text-white p-2 cursor-pointer"
-          >
-            <DropdownMenuItem onClick={() => filterByCategory("Codificação")}>
-              Codificação
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => filterByCategory("Revisão")}>
-              Revisão
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => filterByCategory("Gerenciamento")}>
-              Gerenciamento
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => filterByCategory("Deploy")}>
-              Deploy
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => filterByCategory("Testes")}>
-              Testes
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex gap-4">
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto w-40">
+                {getPriorityText()} <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="center"
+              className="w-40 rounded bg-black/80 text-white p-2 cursor-pointer"
+            >
+              <DropdownMenuItem
+                className="text-green-200"
+                onClick={() => filterByPriority("BAIXA")}
+              >
+                Baixa
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-yellow-200"
+                onClick={() => filterByPriority("MÉDIA")}
+              >
+                Média
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-red-200"
+                onClick={() => filterByPriority("ALTA")}
+              >
+                Alta
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => filterByPriority(null)}>
+                Todos
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto w-40">
+                {getCategoryText()} <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="center"
+              className="w-40 rounded bg-black/80 text-white p-2 cursor-pointer"
+            >
+              <DropdownMenuItem onClick={() => filterByCategory("Codificação")}>
+                Codificação
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => filterByCategory("Revisão")}>
+                Revisão
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => filterByCategory("Gerenciamento")}
+              >
+                Gerenciamento
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => filterByCategory("Deploy")}>
+                Deploy
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => filterByCategory("Testes")}>
+                Testes
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       <div>
@@ -287,7 +294,9 @@ function TodoList() {
             <CircularProgress />
           </div>
         ) : currentTasks.length === 0 ? (
-          <p className="text-gray-500">Nenhuma tarefa encontrada.</p>
+          <div className="w-full flex items-center justify-center">
+            <p className="text-gray-500">Nenhuma tarefa encontrada.</p>
+          </div>
         ) : (
           currentTasks.map((task) => (
             <TaskItem
