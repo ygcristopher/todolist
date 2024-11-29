@@ -1,4 +1,4 @@
-# Sprin List Application
+# Sprin List Application (College Work)
 
 Este repositório contém a implementação de um **aplicativo de lista de tarefas (Todo List)**, que inclui tanto a **API** quanto o **Frontend**. A arquitetura do projeto é um **mono repo**, com a API e o Frontend no mesmo repositório, cada um com seu próprio diretório.
 
